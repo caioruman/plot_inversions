@@ -19,7 +19,7 @@ from rpn.rpn import RPN
 from rpn.domains.rotated_lat_lon import RotatedLatLon
 
 
-def plotMaps_pcolormesh(data, figName, values, mapa, lons2d, lats2d):
+def plotMaps_pcolormesh(data, figName, values, mapa, lons2d, lats2d, stations, var):
     '''
     fnames: List of filenames. Usually 2 (clim mean and future projection)
     varnames: list of variables to plot
@@ -53,6 +53,17 @@ def plotMaps_pcolormesh(data, figName, values, mapa, lons2d, lats2d):
     meridians = np.arange(0.,351.,45.)
     b.drawmeridians(meridians,labels=[True,True,True,True], fontsize=16)
 
+    for item in stations:
+#        print(item)
+#        print(stations)
+#        print
+        x, y = b(item[1], item[0])
+        if var == "DT" or var == "DT0" or var == "DT12":
+            vv = item[2]
+        else:
+            vv = item[3]
+
+        img = b.scatter(x, y, c=vv, s=80, cmap=mapa, norm=bn, edgecolors='black')
 
     plt.subplots_adjust(top=0.75, bottom=0.25)
 
@@ -108,6 +119,29 @@ for per in period:
             figName = "{0}_{1}_{2}_{3}_{4}".format(var, exp, per, h, datai)
             #figName = "{0}_testeSummer".format(var)
 
+            #open station file
+            sta = open('/home/cruman/project/cruman/Scripts/soundings/inv_list_{0}.dat'.format(per), 'r')
+            
+            stations = []
+            for line in sta:
+                aa = line.replace("''", '').split(';')
+                if aa[0] == "Station_number":
+                    continue
+
+                #Station_number;Latitude;Longitude;Inv_00;Inv_P_00;Inv_12;Inv_P_12;Inv_TT;Inv_P_TT;TotalYear;TotalYearTT
+                if var == "FQR12" or var == "DT12":                    
+                    #ksksk
+                    stations.append((float(aa[1]),float(aa[2]),float(aa[5]),float(aa[6])))
+                elif var == "FQR0" or var == "DT0":
+                    #asdasd
+                    stations.append((float(aa[1]),float(aa[2]),float(aa[3]),float(aa[4])))
+                else:
+                    #asdasd
+                    stations.append((float(aa[1]),float(aa[2]),float(aa[7]),float(aa[8])))
+
+            sta.close()
+
+
             #
             if var == "DZ" or var == "ZBAS":
                 values = np.arange(0,1001,100)
@@ -137,4 +171,4 @@ for per in period:
 
             cmap = mpl.colors.ListedColormap(colors)
 
-            plotMaps_pcolormesh(data, figName, values, cmap, lons2d, lats2d)
+            plotMaps_pcolormesh(data, figName, values, cmap, lons2d, lats2d, stations, var)
