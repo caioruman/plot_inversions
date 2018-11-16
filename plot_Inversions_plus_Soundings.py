@@ -116,7 +116,7 @@ for per in period:
             lons2d = np.squeeze(arq.variables["lon"][:])
             lats2d = np.squeeze(arq.variables["lat"][:])
 
-            figName = "{0}_{1}_{2}_{3}_{4}".format(var, exp, per, h, datai)
+            figName = "{0}_{1}_{2}_{3}_{4}_v2".format(var, exp, per, h, datai)
             #figName = "{0}_testeSummer".format(var)
 
             #open station file
@@ -131,10 +131,12 @@ for per in period:
                 #Station_number;Latitude;Longitude;Inv_00;Inv_P_00;Inv_12;Inv_P_12;Inv_TT;Inv_P_TT;TotalYear;TotalYearTT
                 if var == "FQR12" or var == "DT12":                    
                     #ksksk
-                    stations.append((float(aa[1]),float(aa[2]),float(aa[5]),float(aa[6])))
+                    #stations.append((float(aa[1]),float(aa[2]),float(aa[5]),float(aa[6])))
+                    stations.append((float(aa[1]),float(aa[2]),float(aa[3]),float(aa[4])))
                 elif var == "FQR0" or var == "DT0":
                     #asdasd
-                    stations.append((float(aa[1]),float(aa[2]),float(aa[3]),float(aa[4])))
+                    #stations.append((float(aa[1]),float(aa[2]),float(aa[3]),float(aa[4])))
+                    stations.append((float(aa[1]),float(aa[2]),float(aa[5]),float(aa[6])))
                 else:
                     #asdasd
                     stations.append((float(aa[1]),float(aa[2]),float(aa[7]),float(aa[8])))
